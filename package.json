@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "name": "discord-wholesome-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for sending wholesome photos",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "dotenv cross-var wrangler dev",
+    "build:env": "dotenv cross-var echo %IMGUR_API_CLIENT_ID% | dotenv cross-var wrangler secret put IMGUR_API_CLIENT_ID && dotenv cross-var echo %DISCORD_APP_PUBLIC_KEY% | dotenv cross-var wrangler secret put DISCORD_APP_PUBLIC_KEY",
+    "publish": "dotenv cross-var wrangler publish",
+    "format": "prettier --write './src/**/*.{js,css,json,md}'"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@cloudflare/wrangler": "^1.15.0",
+    "cross-var": "^1.1.0",
+    "dotenv-cli": "^4.0.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^10.5.4",
+    "prettier": "^1.18.2"
+  },
+  "lint-staged": {
+    "./src/**/*.{js}": "npm run format"
+  }
+}
