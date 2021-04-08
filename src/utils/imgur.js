@@ -16,14 +16,17 @@ const getRandomWholesomePost = async () => {
 const convertPostToResponseData = ({
   title,
   link: url,
-  images: [{ type, link: imageUrl }],
+  description,
+  images: [{ type, link: imageUrl, description: imageDescription }],
   datetime,
   account_url: authorName
 }) => {
+  const embedDescription = description || imageDescription;
+
   // Discord currently isn't showing mp4 or gifv embeds, but will expand a url in the message
   if (type === 'video/mp4') {
     return {
-      content: `${title}\n${url}`
+      content: [title, embedDescription, url].filter(Boolean).join('\n'),
     };
   }
 
@@ -32,6 +35,7 @@ const convertPostToResponseData = ({
       {
         title,
         url,
+        description: embedDescription,
         color: 3066993,
         timestamp: new Date(datetime * 1000).toISOString(),
         footer: {
