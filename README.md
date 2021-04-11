@@ -12,19 +12,21 @@ Bot/interaction receiver for [Discord Slash Commands](https://discord.com/develo
 - [ngrok](https://ngrok.com)
 
 ### Setup
-Create a new JavaScript Cloudflare Worker with the name `discord-wholesome-bot` and deploy with the default setup.
-
-In your local code respository, create a `.env` file from the provided example file:
+Create a new JavaScript Cloudflare Worker with the name `discord-wholesome-bot` and deploy with the default setup. Add the following environment variables to the worker as secrets (encrypted values):
 
 ```
-cp .env.example .env
+DISCORD_APP_PUBLIC_KEY
+DISCORD_WEBHOOK_URL
+IMGUR_API_CLIENT_ID
 ```
 
-Fill in all the environment variable values, then deploy them to Cloudflare:
+In your local code respository, create a `wrangler.toml` file from the provided example file:
 
 ```
-npm run build:env
+cp wrangler.toml.example wrangler.toml
 ```
+
+Fill in the `account_id` and KV Namespace IDs.
 
 ### Run
 Start the worker:

@@ -1,0 +1,7 @@
+name = "discord-wholesome-bot"
+type = "webpack"
+account_id = ""
+workers_dev = true
+kv_namespaces = [
+  { binding = "USED_IMGUR_IDS", id = "", preview_id = "" }
+]
