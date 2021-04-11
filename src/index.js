@@ -1,10 +1,14 @@
 const { InteractionType, InteractionResponseType } = require('./types');
 const {
   getRandomWholesomePost,
+  getTopWholesomePost,
   convertPostToResponseData
 } = require('./utils/imgur');
 const { createErrorResponse, createJsonResponse } = require('./utils/response');
-const { verifyDiscordWebhookRequest } = require('./utils/webhook');
+const {
+  verifyDiscordWebhookRequest,
+  executeDiscordWebhook
+} = require('./utils/webhook');
 
 const handleRequest = async request => {
   const { method, headers } = request;
@@ -29,6 +33,15 @@ const handleRequest = async request => {
   });
 };
 
+const handleScheduled = async () => {
+  const post = await getTopWholesomePost();
+  return executeDiscordWebhook(convertPostToResponseData(post));
+};
+
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
+});
+
+addEventListener('scheduled', event => {
+  event.waitUntil(handleScheduled());
 });

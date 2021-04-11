@@ -7,4 +7,13 @@ const verifyDiscordWebhookRequest = (body, headers) =>
     Buffer.from(DISCORD_APP_PUBLIC_KEY, 'hex')
   );
 
-module.exports = { verifyDiscordWebhookRequest };
+const executeDiscordWebhook = async data =>
+  fetch(DISCORD_WEBHOOK_URL, {
+    body: JSON.stringify(data),
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+module.exports = { verifyDiscordWebhookRequest, executeDiscordWebhook };

@@ -1,6 +1,6 @@
-const getRandomWholesomePost = async () => {
+const getImgurPosts = async path => {
   const response = await fetch(
-    `https://api.imgur.com/3/gallery/t/wholesome/top/week?client_id=${IMGUR_API_CLIENT_ID}&showViral=true`,
+    `https://api.imgur.com/3${path}?client_id=${IMGUR_API_CLIENT_ID}&showViral=true`,
     {
       headers: {
         'content-type': 'application/json'
@@ -10,7 +10,26 @@ const getRandomWholesomePost = async () => {
   const {
     data: { items }
   } = await response.json();
+  return items.filter(({ is_ad: isAd }) => !isAd);
+};
+
+const getRandomWholesomePost = async () => {
+  const items = await getImgurPosts('/gallery/t/wholesome/top/week');
   return items[Math.floor(Math.random() * items.length)];
+};
+
+const getTopWholesomePost = async () => {
+  const items = await getImgurPosts('/gallery/t/wholesome/top/day');
+  for (const item of items) {
+    if (await USED_IMGUR_IDS.get(item.id)) {
+      continue;
+    }
+
+    await USED_IMGUR_IDS.put(item.id, '1', { expirationTtl: 86400 });
+    return item;
+  }
+
+  return items[0];
 };
 
 const convertPostToResponseData = ({
@@ -26,7 +45,7 @@ const convertPostToResponseData = ({
   // Discord currently isn't showing mp4 or gifv embeds, but will expand a url in the message
   if (type === 'video/mp4') {
     return {
-      content: [title, embedDescription, url].filter(Boolean).join('\n'),
+      content: [title, embedDescription, url].filter(Boolean).join('\n')
     };
   }
 
@@ -55,4 +74,8 @@ const convertPostToResponseData = ({
   };
 };
 
-module.exports = { getRandomWholesomePost, convertPostToResponseData };
+module.exports = {
+  getRandomWholesomePost,
+  getTopWholesomePost,
+  convertPostToResponseData
+};
