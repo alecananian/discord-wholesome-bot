@@ -42,8 +42,8 @@ const convertPostToResponseData = ({
 }) => {
   const embedDescription = description || imageDescription;
 
-  // Discord currently isn't showing mp4 or gifv embeds, but will expand a url in the message
-  if (type === 'video/mp4') {
+  // Discord currently isn't showing mp4 or gif embeds, but will expand a url in the message
+  if (type === 'video/mp4' || type === 'image/gif') {
     return {
       content: [title, embedDescription, url].filter(Boolean).join('\n')
     };
